@@ -124,26 +124,25 @@ void loop() {
 
 
 
-bool ProcessSerialData()//读取PMS1003的数据。并根据通信协议转化成有效的值。
-{
+bool ProcessSerialData(){//读取攀藤PM2.5集成甲醛传感器PMS5003S的数据。并根据通信协议转化成有效的值。
+
   uint8_t mData = 0;
   uint8_t mPkt[32]={0};
   int mCheck = 0;
-while (mySerial.available() > 0) 
-  {  
+while (mySerial.available() > 0) {
     //Basing on the protocol of Plantower PMS1003
     mData = mySerial.read();     
     delay(2);//wait until packet is received
-    if(mData == 0x42)//head1 ok
-     {
+    if(mData == 0x42){//head1 ok
+     
         mPkt[0] =  mData;
         mData = mySerial.read();
-        if(mData ==0x4d)//head2 ok
-        {
+        if(mData ==0x4d){//head2 ok
+        
           mPkt[1] =  mData;
           mCheck = 66+77;
-          for(int i=2;i < 30;i++)//data recv and crc calc
-          {
+          for(int i=2;i < 30;i++){//data recv and crc calc
+          
              delay(2);
              mPkt[i] = mySerial.read();
              mCheck += mPkt[i];
@@ -157,8 +156,8 @@ while (mySerial.available() > 0)
           Serial.print(mCheck);
           Serial.print("  ");
           Serial.println(mPkt[30]*256+mPkt[31]);
-          if(mCheck == mPkt[30]*256+mPkt[31])//crc ok
-          {
+          if(mCheck == mPkt[30]*256+mPkt[31]){//crc ok
+          
 
             int xyz = mPkt[28]*256+mPkt[29];
             Serial.print("HCHO ==");
